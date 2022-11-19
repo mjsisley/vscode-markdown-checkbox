@@ -114,3 +114,9 @@ export const getDateString = (now: Date) => {
   const date = leadingZero(now.getDate());
   return `${year}-${month}-${date}`;
 };
+
+export const escapeRegExp = (s: string) => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+
+export const regexp = (strings: TemplateStringsArray, ...values: any[]): RegExp => {
+	return RegExp(strings[0] + values.map((v, i) => escapeRegExp(v) + strings[i+1]).join(""))
+};

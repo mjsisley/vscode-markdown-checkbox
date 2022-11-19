@@ -162,6 +162,11 @@
           "type": "string",
           "default": "YYYY-MM-DD",
           "description": "Format date"
+        },
+        "markdown-checkbox.dateWrapper": {
+          "type": "string",
+          "default": "[@date]",
+          "description": "String wrapper for the date, use @date to denote position of the date; omit @date for a string to be added without a date"
         }
       }
     }

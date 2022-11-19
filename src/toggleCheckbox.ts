@@ -82,6 +82,11 @@ const markField = (
     );
     const dateWhenChecked = helpers.getConfig<boolean>('dateWhenChecked');
     const dateFormat = helpers.getConfig<string>('dateFormat');
+    const dateWrapper = helpers.getConfig<string>('dateWrapper');
+
+    const splitDateWrapper = dateWrapper.split("@date");
+    const datePrefix = splitDateWrapper[0];
+    const dateSuffix = splitDateWrapper[1] || "";
 
     // get line of the checkbox
     const line = editor.document.lineAt(checkboxPosition.line);
@@ -107,10 +112,11 @@ const markField = (
       if (strikeThroughWhenChecked) {
         newText = `~~${newText}~~`;
       }
+      
       if (dateWhenChecked) {
-        newText = `${newText} [${moment(new Date()).format(
+        newText = `${newText} ${datePrefix}${moment(new Date()).format(
           dateFormat
-        )}]${whitespace}`;
+        )}${dateSuffix}${whitespace}`;
       }
 
       editBuilder.replace(
@@ -122,9 +128,10 @@ const markField = (
       );
     } else if (lhc && lhc.checked) {
       let newText = textWithoutCheckbox.replace(/~~/g, '').replace(/\*/g, '');
-      // remove the date string
+      // remove the date string and date wrapper
       if (dateWhenChecked) {
-        newText = newText.replace(/\s+\[[^[]+?\]$/, '') + whitespace;
+        newText = newText.replace(helpers.regexp`\\s${datePrefix}(.*)${dateSuffix}`, '') + whitespace;
+        
       }
 
       editBuilder.replace(
